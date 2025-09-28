@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Api Client</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="https://green-api.com/docs/assets/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <style>
+    body {
+      background-color: #efeae2;
+    }
+    * {
+      font-family: "JetBrains Mono", sans-serif;
+    }
+    h1 {
+      text-align: center;
+      width: 93vw;
+    }
+    input {
+      height: 40px;
+    }
+    nav {
+      width: 100%;
+      display: flex;
+    }
+    .links {
+      text-align: end;
+      padding-top: 30px;
+    }
+    input,
+    textarea {
+      background-color: #d2fed6;
+      border: solid;
+      border-radius: 5px;
+    }
+    .main {
+      width: 90%;
+      height: 90vh;
+    }
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: space-around;
+    }
+
+    .inputs {
+      width: 20%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .inputMessage {
+      max-width: 100%;
+    }
+
+    .output {
+      width: 45%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .insertDiv {
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      border: solid;
+      border-width: 2px;
+      border-radius: 10px;
+      padding: 30px;
+    }
+  </style>
+
+  <body>
+    <nav>
+      <h1>GREEN API CLENT</h1>
+      <div class="links">
+        <a target="_blank" href="https://t.me/ezdiysag"
+          ><i class="fa fa-telegram" style="font-size: 36px; color: blue"></i
+        ></a>
+        <a target="_blank" href="https://github.com/polonkoevv/greenApi"
+          ><i class="fa fa-github" style="font-size: 40px; color: black"></i
+        ></a>
+      </div>
+    </nav>
+    <div class="main">
+      <div class="container">
+        <div class="inputs">
+          <h2>Ввод параметров:</h2>
+          <input
+            id="apiUrl"
+            type="url"
+            value="https://1105.api.green-api.com"
+            placeholder="Адрес API"
+          />
+          <input
+            id="idInstance"
+            type="text"
+            value=""
+            placeholder="ID сущности"
+          />
+          <input
+            id="ApiTokenInstance"
+            type="password"
+            value=""
+            placeholder="Токен API"
+          />
+          <button id="getSettingsBtn">getSettings</button>
+          <button id="getStateInstanceBtn">getStateInstance</button>
+
+          <input
+            id="mesNumber"
+            type="text"
+            value=""
+            placeholder="+7 (___) ___-__-__"
+          />
+          <textarea
+            class="inputMessage"
+            id="message"
+            placeholder="Сообщение"
+          ></textarea>
+
+          <button id="sendMessageBtn">sendMessage</button>
+
+          <input
+            id="fileNumber"
+            type="text"
+            value=""
+            placeholder="+7 (___) ___-__-__"
+          />
+          <input id="fileUrl" type="url" value="" placeholder="Адрес файла" />
+          <input id="fileName" type="url" value="" placeholder="Имя файла" />
+          <input
+            id="fileCaption"
+            type="url"
+            value=""
+            placeholder="Подпись (не обязательное поле)"
+          />
+          <button id="sendFileByUrlBtn">sendFileByUrl</button>
+        </div>
+
+        <div class="output">
+          <h2>Ответ</h2>
+          <div id="insertDiv" class="insertDiv">
+            <p class="insertArea" id="insertArea"></p>
+          </div>
+          <!-- <textarea name="" id="insertArea"> </textarea> -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  // Метод для получения настроек сущности
+  async function getSettings(apiUrl, idInstance, apiTokenInstance) {
+    try {
+      const response = await fetch(
+        `${apiUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`
+      );
+
+      if (!response.ok) {
+        throw response;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  // Метод для получения состояния сущности
+  async function getStateInstance(apiUrl, idInstance, apiTokenInstance) {
+    try {
+      const response = await fetch(
+        `${apiUrl}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`
+      );
+
+      if (!response.ok) {
+        throw response;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Ошибка:", error);
+      throw error;
+    }
+  }
+  // Метод для отправки сообщения
+  async function sendMessage(
+    apiUrl,
+    idInstance,
+    apiTokenInstance,
+    number,
+    message
+  ) {
+    try {
+      const response = await fetch(
+        `${apiUrl}/waInstance${idInstance}/sendMessage/${apiTokenInstance}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "User-Agent": "GREEN-API_POSTMAN/1.0",
+          },
+          body: JSON.stringify({
+            chatId: `${number.split('').filter(char => /\d/.test(char)).join('')}@c.us`,
+            message: message,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw response;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  // Метод для отправки файла
+  async function sendFileByUrl(
+    apiUrl,
+    idInstance,
+    apiTokenInstance,
+    fileNumber,
+    fileUrl,
+    fileName,
+    fileCaption
+  ) {
+    try {
+      const response = await fetch(
+        `${apiUrl}/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chatId: `${fileNumber.split('').filter(char => /\d/.test(char)).join('')}@c.us`,
+            urlFile: fileUrl,
+            fileName: fileName,
+            caption: fileCaption,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(reponse);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch {
+      console.error("Ошибка:", error);
+      throw error;
+    }
+  }
+
+  // ----------------------------------------------
+  // Валидация
+  // Валидация URL
+  function validateUrl(url) {
+    if (!url || url.trim().length === 0) {
+      alert("Введите URL адрес");
+      return false;
+    }
+
+    if (!url.includes(".") || url.trim().length < 5) {
+      alert("Введите корректный URL адрес (например: example.com)");
+      return false;
+    }
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      alert("Рекомендуется указать протокол (http:// или https://)");
+    }
+
+    return true;
+  }
+
+  // Валидация номера телефона (РФ)
+  function validatePhone(phone) {
+    if (!phone || phone.trim().length === 0) {
+      alert("Введите номер телефона");
+      return false;
+    }
+
+    const phoneRegex =
+      /^[\+]?[78][-\s]?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$/;
+
+    if (!phoneRegex.test(phone.trim())) {
+      alert(
+        "Введите корректный номер телефона\nПример: +7 (999) 123-45-67 или 89991234567"
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  // Валидация обычного текста (в том числе и токенды, идентификаторы)
+  function validateText(text, name) {
+    if (!text || text.trim().length === 0) {
+      alert(`Введите ${name}!`);
+      return false;
+    }
+    return true;
+  }
+
+  // ----------------------------------------------
+
+  // ----------------------------------------------
+  // Вставка данных в часть ответа
+  // Вставляем полученный ответ. Фон белый.
+  // Вставляем полученный ответ, идентификация ошибка ли это (isError), выводи в ответе тело ошибки и статус. Фон красный
+  async function insertData(data, isError = false) {
+    const insertArea = document.getElementById("insertArea");
+    const insertDiv = document.getElementById("insertDiv");
+    insertDiv.style.backgroundColor = "#fff";
+    if (isError) {
+      console.log(data.status);
+      insertDiv.style.backgroundColor = "#fcebeb";
+      insertArea.innerHTML = `<pre>Status: ${data.status} ${
+        data.statusText
+      }\nBody:\n${JSON.stringify(data, null, 3)}</pre>`;
+    } else {
+      insertArea.innerHTML = `<pre>${JSON.stringify(data, null, 3)}</pre>`;
+    }
+  }
+
+  // ----------------------------------------------
+  // Добавляем слушатели событий для кнопок на странице
+  document
+    .getElementById("getSettingsBtn")
+    .addEventListener("click", async function () {
+      const apiUrl = document.getElementById("apiUrl").value;
+      const idInstance = document.getElementById("idInstance").value;
+      const ApiTokenInstance =
+        document.getElementById("ApiTokenInstance").value;
+      let valid;
+
+      valid = validateUrl(apiUrl);
+      valid = validateText(idInstance, "ID сущности");
+      valid = validateText(ApiTokenInstance, "токен сущности");
+      if (!valid) {
+        return;
+      }
+      try {
+        res = await getSettings(apiUrl, idInstance, ApiTokenInstance);
+        insertData(res, false);
+      } catch (error) {
+        console.error(`Error: getSettings ${error}`);
+        insertData(error, true);
+      }
+    });
+
+  document
+    .getElementById("getStateInstanceBtn")
+    .addEventListener("click", async function () {
+      const apiUrl = document.getElementById("apiUrl").value;
+      const idInstance = document.getElementById("idInstance").value;
+      const ApiTokenInstance =
+        document.getElementById("ApiTokenInstance").value;
+      let valid;
+      valid = validateUrl(apiUrl);
+      valid = validateText(idInstance, "ID сущности");
+      valid = validateText(ApiTokenInstance, "токен сущности");
+      if (!valid) {
+        return;
+      }
+      try {
+        res = await getStateInstance(apiUrl, idInstance, ApiTokenInstance);
+        insertData(res, false);
+      } catch (error) {
+        console.error(`Error: getStateInstance ${error}`);
+        insertData(error, true);
+      }
+    });
+
+  document
+    .getElementById("sendMessageBtn")
+    .addEventListener("click", async function () {
+      const apiUrl = document.getElementById("apiUrl").value;
+      const idInstance = document.getElementById("idInstance").value;
+      const ApiTokenInstance =
+        document.getElementById("ApiTokenInstance").value;
+      const number = document.getElementById("mesNumber").value;
+      const message = document.getElementById("message").value;
+
+      let valid;
+
+      valid = validateUrl(apiUrl);
+      valid = validatePhone(number);
+      valid = validateText(idInstance, "ID сущности");
+      valid = validateText(ApiTokenInstance, "токен сущности");
+      valid = validateText(message, "текст сообщения");
+      if (!valid) {
+        return;
+      }
+      try {
+        res = await sendMessage(
+          apiUrl,
+          idInstance,
+          ApiTokenInstance,
+          number,
+          message
+        );
+        insertData(res, false);
+      } catch (error) {
+        console.error(`Error: sendMessage ${error}`);
+        insertData(error, true);
+      }
+    });
+
+  document
+    .getElementById("sendFileByUrlBtn")
+    .addEventListener("click", async function () {
+      const apiUrl = document.getElementById("apiUrl").value;
+      const idInstance = document.getElementById("idInstance").value;
+      const ApiTokenInstance =
+        document.getElementById("ApiTokenInstance").value;
+      const number = document.getElementById("fileNumber").value;
+      const fileUrl = document.getElementById("fileUrl").value;
+      const fileName = document.getElementById("fileName").value;
+      const fileCaption = document.getElementById("fileCaption").value;
+      let valid;
+
+      valid = validateUrl(apiUrl);
+      valid = validateText(idInstance, "ID сущности");
+      valid = validateText(ApiTokenInstance, "токен сущности");
+      valid = validatePhone(number);
+      valid = validateUrl(fileUrl, "ссылку на файл");
+      valid = validateText(fileName, "назавние файла");
+      if (!valid) {
+        return;
+      }
+      try {
+        res = await sendFileByUrl(
+          apiUrl,
+          idInstance,
+          ApiTokenInstance,
+          number,
+          fileUrl,
+          fileName,
+          fileCaption
+        );
+        insertData(res, false);
+      } catch (error) {
+        console.error(`Error: sendFileByUrl ${error}`);
+        insertData(error, true);
+      }
+    });
+
+    document.getElementById('fileNumber').addEventListener('input', function(e) {
+    let value = this.value.replace(/\D/g, '');
+    
+    if (value.startsWith('7')) {
+        value = '7' + value.substring(1);
+    } else if (value.startsWith('8')) {
+        value = '7' + value.substring(1);
+    } else if (!value.startsWith('7')) {
+        value = '7' + value;
+    }
+    
+    // Форматирование
+    let formattedValue = '+7 (';
+    
+    if (value.length > 1) {
+        formattedValue += value.substring(1, 4);
+    }
+    if (value.length >= 4) {
+        formattedValue += ') ' + value.substring(4, 7);
+    }
+    if (value.length >= 7) {
+        formattedValue += '-' + value.substring(7, 9);
+    }
+    if (value.length >= 9) {
+        formattedValue += '-' + value.substring(9, 11);
+    }
+    
+    this.value = formattedValue;
+});
+
+// Для начального значения
+document.getElementById('fileNumber').addEventListener('focus', function() {
+    if (!this.value) {
+        this.value = '+7 (';
+    }
+});
+
+    document.getElementById('mesNumber').addEventListener('input', function(e) {
+    let value = this.value.replace(/\D/g, '');
+    
+    if (value.startsWith('7')) {
+        value = '7' + value.substring(1);
+    } else if (value.startsWith('8')) {
+        value = '7' + value.substring(1);
+    } else if (!value.startsWith('7')) {
+        value = '7' + value;
+    }
+    
+    // Форматирование
+    let formattedValue = '+7 (';
+    
+    if (value.length > 1) {
+        formattedValue += value.substring(1, 4);
+    }
+    if (value.length >= 4) {
+        formattedValue += ') ' + value.substring(4, 7);
+    }
+    if (value.length >= 7) {
+        formattedValue += '-' + value.substring(7, 9);
+    }
+    if (value.length >= 9) {
+        formattedValue += '-' + value.substring(9, 11);
+    }
+    
+    this.value = formattedValue;
+});
+
+// Для начального значения
+document.getElementById('mesNumber').addEventListener('focus', function() {
+    if (!this.value) {
+        this.value = '+7 (';
+    }
+});
+</script>
