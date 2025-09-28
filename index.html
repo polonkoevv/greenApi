@@ -160,7 +160,6 @@
           <div id="insertDiv" class="insertDiv">
             <p class="insertArea" id="insertArea"></p>
           </div>
-          <!-- <textarea name="" id="insertArea"> </textarea> -->
         </div>
       </div>
     </div>
@@ -172,7 +171,12 @@
   async function getSettings(apiUrl, idInstance, apiTokenInstance) {
     try {
       const response = await fetch(
-        `${apiUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`
+        `${apiUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       );
 
       if (!response.ok) {
@@ -189,7 +193,12 @@
   async function getStateInstance(apiUrl, idInstance, apiTokenInstance) {
     try {
       const response = await fetch(
-        `${apiUrl}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`
+        `${apiUrl}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
       );
 
       if (!response.ok) {
@@ -217,6 +226,7 @@
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
             "User-Agent": "GREEN-API_POSTMAN/1.0",
           },
           body: JSON.stringify({
@@ -254,6 +264,7 @@
         {
           method: "POST",
           headers: {
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
