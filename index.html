@@ -106,20 +106,20 @@
           <input
             id="apiUrl"
             type="url"
-            value="https://1105.api.green-api.com"
+            value="https://7105.api.green-api.com"
             placeholder="Адрес API"
           />
           <input
             id="idInstance"
             type="text"
-            value=""
             placeholder="ID сущности"
+            value="7105331954"
           />
           <input
             id="ApiTokenInstance"
             type="password"
-            value=""
             placeholder="Токен API"
+            value="aa4de20b60274ad7aa354f5a7098128d6a10d6f52e84440fb4"
           />
           <button id="getSettingsBtn">getSettings</button>
           <button id="getStateInstanceBtn">getStateInstance</button>
@@ -171,14 +171,7 @@
   async function getSettings(apiUrl, idInstance, apiTokenInstance) {
     try {
       const response = await fetch(
-        `${apiUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
-          },
-        }
+        `${apiUrl}/waInstance${idInstance}/getSettings/${apiTokenInstance}`
       );
 
       if (!response.ok) {
@@ -230,13 +223,6 @@
     try {
       const response = await fetch(
         `${apiUrl}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
-          },
-        }
       );
 
       if (!response.ok) {
@@ -297,9 +283,6 @@
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
             "User-Agent": "GREEN-API_POSTMAN/1.0",
           },
           body: JSON.stringify({
@@ -359,12 +342,6 @@
         `${apiUrl}/waInstance${idInstance}/sendFileByUrl/${apiTokenInstance}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST,PATCH,OPTIONS",
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
             chatId: `${fileNumber
               .split("")
