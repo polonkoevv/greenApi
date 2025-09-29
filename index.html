@@ -188,6 +188,40 @@
       const data = await response.json();
       return data;
     } catch (error) {
+      if (
+        error.message.includes("preflight") ||
+        error.message.includes("OPTIONS") ||
+        (error.message.includes("CORS") &&
+          error.message.includes("Access-Control-Allow-Origin"))
+      ) {
+        console.error("CORS PREFLIGHT ERROR:", error);
+        throw new Error(
+          "CORS: PREFLIGHT CORS ошибка."
+        );
+      }
+
+      if (
+        error.name === "TypeError" &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error(
+          "CORS: Доступ запрещен. Невозможно сделать запрос к API."
+        );
+      }
+
+      // Проверяем другие возможные CORS сообщения
+      if (
+        error.message.includes("Access-Control-Allow-Origin") ||
+        error.message.includes("CORS") ||
+        error.message.includes("origin")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error("CORS: Запрос заблокирован политикой безопасности.");
+      }
+
+      // Другие ошибки
+      console.error("OTHER ERROR:", error);
       throw error;
     }
   }
@@ -212,6 +246,40 @@
       const data = await response.json();
       return data;
     } catch (error) {
+      if (
+        error.message.includes("preflight") ||
+        error.message.includes("OPTIONS") ||
+        (error.message.includes("CORS") &&
+          error.message.includes("Access-Control-Allow-Origin"))
+      ) {
+        console.error("CORS PREFLIGHT ERROR:", error);
+        throw new Error(
+          "CORS: PREFLIGHT CORS ошибка."
+        );
+      }
+
+      if (
+        error.name === "TypeError" &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error(
+          "CORS: Доступ запрещен. Невозможно сделать запрос к API."
+        );
+      }
+
+      // Проверяем другие возможные CORS сообщения
+      if (
+        error.message.includes("Access-Control-Allow-Origin") ||
+        error.message.includes("CORS") ||
+        error.message.includes("origin")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error("CORS: Запрос заблокирован политикой безопасности.");
+      }
+
+      // Другие ошибки
+      console.error("OTHER ERROR:", error);
       throw error;
     }
   }
@@ -250,6 +318,29 @@
       const data = await response.json();
       return data;
     } catch (error) {
+
+      if (
+        error.name === "TypeError" &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error(
+          "CORS: Доступ запрещен. Невозможно сделать запрос к API."
+        );
+      }
+
+      // Проверяем другие возможные CORS сообщения
+      if (
+        error.message.includes("Access-Control-Allow-Origin") ||
+        error.message.includes("CORS") ||
+        error.message.includes("origin")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error("CORS: Запрос заблокирован политикой безопасности.");
+      }
+
+      // Другие ошибки
+      console.error("OTHER ERROR:", error);
       throw error;
     }
   }
@@ -291,8 +382,29 @@
 
       const data = await response.json();
       return data;
-    } catch {
-      console.error("Ошибка:", error);
+    } catch (error) {
+      if (
+        error.name === "TypeError" &&
+        error.message.includes("Failed to fetch")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error(
+          "CORS: Доступ запрещен. Невозможно сделать запрос к API."
+        );
+      }
+
+      // Проверяем другие возможные CORS сообщения
+      if (
+        error.message.includes("Access-Control-Allow-Origin") ||
+        error.message.includes("CORS") ||
+        error.message.includes("origin")
+      ) {
+        console.error("CORS ERROR:", error);
+        throw new Error("CORS: Запрос заблокирован политикой безопасности.");
+      }
+
+      // Другие ошибки
+      console.error("OTHER ERROR:", error);
       throw error;
     }
   }
@@ -357,13 +469,18 @@
     const insertArea = document.getElementById("insertArea");
     const insertDiv = document.getElementById("insertDiv");
     insertDiv.style.backgroundColor = "#fff";
-    if (isError) {
-      insertDiv.style.backgroundColor = "#fcebeb";
-      insertArea.innerHTML = `<pre>Status: ${data.status} ${
-        data.statusText
-      }\nBody:\n${JSON.stringify(data, null, 3)}</pre>`;
-    } else {
+
+    if (!isError) {
       insertArea.innerHTML = `<pre>${JSON.stringify(data, null, 3)}</pre>`;
+    } else {
+      insertDiv.style.backgroundColor = "#fcebeb";
+      if (data.message.includes("CORS")) {
+        insertArea.innerHTML = `<pre>${data.message}</pre>`;
+      } else {
+        insertArea.innerHTML = `<pre>Status: ${data.status} ${
+          data.statusText
+        }\nBody:\n${JSON.stringify(data, null, 3)}</pre>`;
+      }
     }
   }
 
